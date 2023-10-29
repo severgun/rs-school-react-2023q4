@@ -1,35 +1,50 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import './App.css';
+import React, { Component } from 'react';
+import { Header, Main } from './components';
+import axios from 'axios';
 
-function App() {
-  const [count, setCount] = useState(0);
+export interface ISearchState {
+  searchValue: string;
+  searchResults: Record<string, never>;
+}
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  );
+class App extends Component {
+  state = {
+    searchValue: '',
+    searchResults: {},
+  };
+
+  updateState = (newState: ISearchState) => {
+    this.setState(newState);
+  };
+
+  componentDidMount() {
+    const searchValue = localStorage.getItem('prevSearchValue') || '';
+
+    const getSearchResults = async () => {
+      try {
+        const res = await axios.get(
+          `https://pokeapi.co/api/v2/pokemon/${searchValue}`
+        );
+        this.setState({
+          searchValue,
+          searchResults: res,
+        });
+
+        console.log(res);
+      } catch (error) {}
+    };
+
+    getSearchResults();
+  }
+
+  render() {
+    return (
+      <>
+        <Header searchState={this.state} updateSearchState={this.updateState} />
+        <Main searchState={this.state} />
+      </>
+    );
+  }
 }
 
 export default App;
