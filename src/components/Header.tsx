@@ -10,12 +10,18 @@ interface Props {
 class Header extends Component<Props> {
   handleSearch() {
     const { searchValue } = this.props.searchState;
+
+    const apiEndpoint =
+      searchValue === ''
+        ? `https://swapi.dev/api/planets/`
+        : `https://swapi.dev/api/planets/?search=${searchValue}`;
+
     axios
-      .get(`https://pokeapi.co/api/v2/pokemon/${searchValue}`)
+      .get(apiEndpoint)
       .then((response) => {
         this.props.updateSearchState({
           searchValue: searchValue,
-          searchResults: response.data,
+          searchResults: response.data.results,
         });
       })
       .catch(() => {
@@ -36,6 +42,7 @@ class Header extends Component<Props> {
       <header>
         <form>
           <label>
+            Search for SW Planets:
             <input
               type="text"
               name="search"

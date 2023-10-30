@@ -9,7 +9,15 @@ class Main extends Component<Props> {
   render() {
     return (
       <main>
-        <p>{this.props.searchState.searchResults.name}</p>
+        <h1>Star Wars Planets:</h1>
+        <ul>
+          {this.props.searchState.searchResults?.map((p, i) => (
+            <li key={i}>
+              <h3>{p.name}</h3>
+              Diameter: {p.diameter}, Population: {p.population}
+            </li>
+          ))}
+        </ul>
       </main>
     );
   }
