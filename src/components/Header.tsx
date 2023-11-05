@@ -25,7 +25,11 @@ export default function Header(props: HeaderProps) {
 
   return (
     <header>
-      <form>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+        }}
+      >
         <label>
           Search for Star Track Animals:
           <input
