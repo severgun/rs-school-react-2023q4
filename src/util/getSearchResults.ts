@@ -1,29 +1,31 @@
 import axios from 'axios';
-import { IPlanetResponse } from '../types';
 import { ISearchState } from '../App';
-
-const API_URL = 'https://swapi.dev/api/planets/';
 
 export default function getSearchResults(
   searchValue: string,
   updateSearchState: React.Dispatch<React.SetStateAction<ISearchState>>
 ) {
-  const apiEndpoint = !searchValue
-    ? API_URL
-    : `${API_URL}?search=${searchValue}`;
-
   axios
-    .get<IPlanetResponse>(apiEndpoint)
+    .post(
+      'https://stapi.co/api/v1/rest/animal/search',
+      {
+        name: searchValue,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      }
+    )
     .then((response) => {
       console.log(response.data);
 
       updateSearchState({
         searchValue: searchValue,
-        searchResults: response.data ? response.data.results : null,
+        searchResults: response.data ? response.data.animals : null,
       });
     })
     .catch(() => {
-      console.log('Not Found');
+      console.log('API Error');
     });
-  localStorage.setItem('prevSearchValue', searchValue);
 }

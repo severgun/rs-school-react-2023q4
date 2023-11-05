@@ -1,6 +1,6 @@
 import React from 'react';
 import { ISearchState } from '../App';
-import { IPlanet } from '../types';
+import { IAnimal } from '../types';
 
 interface MainProps {
   searchState: ISearchState;
@@ -9,21 +9,24 @@ interface MainProps {
 export default function Main(props: MainProps) {
   const { searchState } = props;
 
-  const getListOfPlanets = (arr: IPlanet[]) => {
-    return arr.map((planetData) => {
+  const getListOfAnimals = (arr: IAnimal[]) => {
+    return arr.map((animalsData) => {
+      console.log(animalsData.earthAnimal);
+
       return (
-        <li key={planetData.url}>
-          <h3>{planetData.name}</h3>
+        <li key={animalsData.uid}>
+          <h3>{animalsData.name}</h3>
           {arr.length === 1 ? (
             <ul>
-              <li>Diameter: {planetData.diameter} km</li>
-              <li>Gravity: {planetData.gravity} G</li>
-              <li>Population: {planetData.population}</li>
-              <li>Rotation Period: {planetData.rotation_period} hours</li>
-              <li>Orbital Period: {planetData.orbital_period} days</li>
-              <li>Terrain: {planetData.terrain}</li>
-              <li>Surface water: {planetData.surface_water} %</li>
-              <li>Climate: {planetData.climate}</li>
+              <li>
+                Earth Animal: {animalsData.earthAnimal ? 'True' : 'False'}
+              </li>
+              <li>
+                Earth Insect: {animalsData.earthInsect ? 'True' : 'False'}
+              </li>
+              <li>It is avian: {animalsData.avian ? 'True' : 'False'}</li>
+              <li>It is feline: {animalsData.feline ? 'True' : 'False'}</li>
+              <li>It is canine: {animalsData.canine ? 'True' : 'False'}</li>
             </ul>
           ) : (
             <></>
@@ -35,10 +38,10 @@ export default function Main(props: MainProps) {
 
   return (
     <main>
-      <h1>Star Wars Planets:</h1>
+      <h1>Star Track Animals:</h1>
       <ul>
         {searchState.searchResults ? (
-          getListOfPlanets(searchState.searchResults)
+          getListOfAnimals(searchState.searchResults)
         ) : (
           <p>Nothing was found.</p>
         )}

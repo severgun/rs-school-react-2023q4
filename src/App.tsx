@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Header, Main } from './components';
-import { IPlanet } from './types';
+import { IAnimal } from './types';
 import getSearchResults from './util/getSearchResults';
 
 export interface ISearchState {
   searchValue: string;
-  searchResults: IPlanet[] | null;
+  searchResults: IAnimal[] | null;
 }
 
 export default function App() {

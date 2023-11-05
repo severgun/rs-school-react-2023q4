@@ -27,7 +27,7 @@ export default function Header(props: HeaderProps) {
     <header>
       <form>
         <label>
-          Search for SW Planets:
+          Search for Star Track Animals:
           <input
             type="text"
             name="search"
