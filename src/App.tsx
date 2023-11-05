@@ -1,69 +1,28 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Header, Main } from './components';
-import axios from 'axios';
-
-export interface IPlanet {
-  name: string;
-  diameter: string;
-  rotation_period: string;
-  orbital_period: string;
-  gravity: string;
-  population: string;
-  climate: string;
-  terrain: string;
-  surface_water: string;
-  residents: string[];
-  films: string[];
-  url: string;
-  created: string;
-  edited: string;
-}
+import { IPlanet } from './types';
+import getSearchResults from './util/getSearchResults';
 
 export interface ISearchState {
   searchValue: string;
-  searchResults?: IPlanet[];
+  searchResults: IPlanet[] | null;
 }
 
-class App extends Component {
-  state = {
+export default function App() {
+  const [searchState, setSearchState] = useState<ISearchState>({
     searchValue: '',
-    searchResults: undefined,
-  };
+    searchResults: null,
+  });
 
-  updateState = (newState: ISearchState) => {
-    this.setState(newState);
-  };
-
-  componentDidMount() {
+  useEffect(() => {
     const searchValue = localStorage.getItem('prevSearchValue') || '';
+    getSearchResults(searchValue, setSearchState);
+  }, []);
 
-    const apiEndpoint =
-      searchValue === ''
-        ? `https://swapi.dev/api/planets/`
-        : `https://swapi.dev/api/planets/?search=${searchValue}`;
-
-    const getSearchResults = async () => {
-      try {
-        const res = await axios.get(apiEndpoint);
-        this.setState(() => {
-          return {
-            searchValue,
-            searchResults: res.data.results,
-          };
-        });
-      } catch (error) {}
-    };
-    getSearchResults();
-  }
-
-  render() {
-    return (
-      <>
-        <Header searchState={this.state} updateSearchState={this.updateState} />
-        <Main searchState={this.state} />
-      </>
-    );
-  }
+  return (
+    <>
+      <Header searchState={searchState} setSearchState={setSearchState} />
+      <Main searchState={searchState} />
+    </>
+  );
 }
-
-export default App;

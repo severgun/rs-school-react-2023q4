@@ -1,65 +1,43 @@
-import axios from 'axios';
-import { Component } from 'react';
+import React from 'react';
 import { ISearchState } from '../App';
+import getSearchResults from '../util/getSearchResults';
 
-interface Props {
+interface HeaderProps {
   searchState: ISearchState;
-  updateSearchState: (newState: ISearchState) => void;
+  setSearchState: React.Dispatch<React.SetStateAction<ISearchState>>;
 }
 
-class Header extends Component<Props> {
-  handleSearch() {
-    const { searchValue } = this.props.searchState;
+export default function Header(props: HeaderProps) {
+  const { searchState, setSearchState } = props;
+  const { searchValue } = searchState;
 
-    const apiEndpoint =
-      searchValue === ''
-        ? `https://swapi.dev/api/planets/`
-        : `https://swapi.dev/api/planets/?search=${searchValue}`;
-
-    axios
-      .get(apiEndpoint)
-      .then((response) => {
-        this.props.updateSearchState({
-          searchValue: searchValue,
-          searchResults: response.data.results,
-        });
-      })
-      .catch(() => {
-        console.log('Not Found');
-      });
+  const handleSearch = () => {
+    getSearchResults(searchValue, setSearchState);
     localStorage.setItem('prevSearchValue', searchValue);
-  }
+  };
 
-  handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.props.updateSearchState({
-      ...this.props.searchState,
-      searchValue: event.target.value.trimEnd(),
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchState({
+      ...searchState,
+      searchValue: event.target.value,
     });
   };
 
-  render() {
-    return (
-      <header>
-        <form>
-          <label>
-            Search for SW Planets:
-            <input
-              type="text"
-              name="search"
-              placeholder="Type your request..."
-              value={this.props.searchState.searchValue}
-              onChange={this.handleChange}
-            />
-          </label>
+  return (
+    <header>
+      <form>
+        <label>
+          Search for SW Planets:
           <input
-            type="button"
-            value="Search"
-            onClick={() => this.handleSearch()}
+            type="text"
+            name="search"
+            placeholder="Type your request..."
+            value={searchValue}
+            onChange={handleChange}
           />
-        </form>
-      </header>
-    );
-  }
+        </label>
+        <input type="button" value="Search" onClick={handleSearch} />
+      </form>
+    </header>
+  );
 }
-
-export default Header;
