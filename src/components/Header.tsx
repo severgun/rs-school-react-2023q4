@@ -1,35 +1,26 @@
-import React from 'react';
-import { ISearchState } from '../App';
-import getSearchResults from '../util/getSearchResults';
+import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
-interface HeaderProps {
-  searchState: ISearchState;
-  setSearchState: React.Dispatch<React.SetStateAction<ISearchState>>;
-}
-
-export default function Header(props: HeaderProps) {
-  const { searchState, setSearchState } = props;
-  const { searchValue } = searchState;
+export default function Header() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchValue, setSearchValue] = useState(
+    searchParams.get('search') || ''
+  );
 
   const handleSearch = () => {
-    getSearchResults(searchValue, setSearchState);
-    localStorage.setItem('prevSearchValue', searchValue);
+    setSearchParams({
+      search: searchValue,
+      page: '1',
+    });
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchState({
-      ...searchState,
-      searchValue: event.target.value,
-    });
+    setSearchValue(event.target.value);
   };
 
   return (
     <header>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-        }}
-      >
+      <form onSubmit={handleSearch}>
         <label>
           Search for Star Track Animals:
           <input
