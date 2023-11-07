@@ -7,9 +7,14 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from 'react-router-dom';
+import { DetailsCard } from './components';
 
 const router = createBrowserRouter(
-  createRoutesFromElements(<Route path="/" element={<App />}></Route>)
+  createRoutesFromElements(
+    <Route path="/" element={<App />}>
+      <Route path="details/:id" element={<DetailsCard />}></Route>
+    </Route>
+  )
 );
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

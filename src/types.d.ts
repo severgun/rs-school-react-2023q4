@@ -8,6 +8,10 @@ export interface IAnimal {
   uid: string;
 }
 
+export interface IAnimalFullResponse {
+  animal: IAnimal;
+}
+
 export interface IAnimalsResponse {
   animals: IAnimals[];
   page: ResponsePage;
