@@ -1,6 +1,5 @@
 import { ChangeEvent, useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import styles from './Pagination.module.css';
+import { NavLink, useSearchParams } from 'react-router-dom';
 import getSearchResults from '../../util/getSearchResults';
 import { IAnimalsResponse } from '../../types';
 
@@ -63,7 +62,6 @@ export default function Pagination() {
       paginationState.currentPage > 1 ? paginationState.currentPage - 1 : 1;
 
     setSearchParams((searchParams) => {
-      console.log(prevPageNum);
       searchParams.set('page', prevPageNum.toString());
       return searchParams;
     });
@@ -73,7 +71,6 @@ export default function Pagination() {
     const nextPageNum = paginationState.currentPage + 1;
 
     setSearchParams((searchParams) => {
-      console.log(nextPageNum);
       searchParams.set('page', nextPageNum.toString());
       return searchParams;
     });
@@ -86,45 +83,51 @@ export default function Pagination() {
 
   const getListOfAnimals = (searchResults: IAnimalsResponse) => {
     return searchResults.animals.map((item) => (
-      <li key={item.uid}>{item.name}</li>
+      <li key={item.uid}>
+        <NavLink
+          to={{
+            pathname: `details/${item.uid}`,
+            search: searchParams.toString(),
+          }}
+        >
+          {item.name}
+        </NavLink>
+      </li>
     ));
   };
 
   return (
-    <div className={styles.pagination}>
+    <div>
       <div>
-        <div>
-          <button
-            disabled={searchResults?.page.firstPage}
-            onClick={handlePrevPage}
-          >
-            &lt;
-          </button>
-          <span>{paginationState.currentPage}</span>{' '}
-          <button
-            disabled={searchResults?.page.lastPage}
-            onClick={handleNextPage}
-          >
-            &gt;
-          </button>
-          <label htmlFor="items-per-page">Items Per Page:</label>
-          <select
-            name="items-per-page"
-            id="items-per-page"
-            onChange={(e) => handleItemsPerPageChange(e)}
-          >
-            <option value="10">10</option>
-            <option value="15">15</option>
-            <option value="20">20</option>
-          </select>
-        </div>
-        <div>
-          {loading
-            ? 'Loading...'
-            : searchResults && <ul>{getListOfAnimals(searchResults)}</ul>}
-        </div>
+        <button
+          disabled={searchResults?.page.firstPage}
+          onClick={handlePrevPage}
+        >
+          &lt;
+        </button>
+        <span>{paginationState.currentPage}</span>{' '}
+        <button
+          disabled={searchResults?.page.lastPage}
+          onClick={handleNextPage}
+        >
+          &gt;
+        </button>
+        <label htmlFor="items-per-page">Items Per Page:</label>
+        <select
+          name="items-per-page"
+          id="items-per-page"
+          onChange={(e) => handleItemsPerPageChange(e)}
+        >
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+        </select>
       </div>
-      <div>Col 2</div>
+      <div>
+        {loading
+          ? 'Loading...'
+          : searchResults && <ul>{getListOfAnimals(searchResults)}</ul>}
+      </div>
     </div>
   );
 }
