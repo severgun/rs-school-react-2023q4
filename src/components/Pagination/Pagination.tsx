@@ -124,7 +124,7 @@ export default function Pagination() {
             : searchResults && <ul>{getListOfAnimals(searchResults)}</ul>}
         </div>
       </div>
-      <div>Col 2</div>
+      <div></div>
     </div>
   );
 }
