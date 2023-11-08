@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useState } from 'react';
-import { NavLink, useSearchParams } from 'react-router-dom';
+import { NavLink, useNavigate, useSearchParams } from 'react-router-dom';
 import getSearchResults from '../../util/getSearchResults';
 import { IAnimalsResponse } from '../../types';
 
@@ -9,6 +9,7 @@ interface IPaginationState {
 }
 
 export default function Pagination() {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [searchResults, setSearchResults] = useState<IAnimalsResponse | null>(
@@ -97,7 +98,13 @@ export default function Pagination() {
   };
 
   return (
-    <div>
+    <div
+      onClick={(e) => {
+        if ((e.target as HTMLElement).tagName !== 'A') {
+          navigate({ pathname: '/', search: searchParams.toString() });
+        }
+      }}
+    >
       <div>
         <button
           disabled={searchResults?.page.firstPage}
