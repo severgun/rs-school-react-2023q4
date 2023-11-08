@@ -13,7 +13,7 @@ export interface IAnimalFullResponse {
 }
 
 export interface IAnimalsResponse {
-  animals: IAnimals[];
+  animals: IAnimal[];
   page: ResponsePage;
   sort: string | null;
 }
