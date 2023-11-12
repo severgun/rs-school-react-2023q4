@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import Pagination from '../Pagination/Pagination';
+import Pagination from '@/components/Pagination/Pagination';
 import styles from './Main.module.css';
 
 export default function Main(): React.JSX.Element {

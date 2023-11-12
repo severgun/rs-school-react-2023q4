@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { IAnimalFullResponse } from '../types';
+import { IAnimalFullResponse } from '@/types';
 
 export default async function getAnimalByUid(
   uid: string

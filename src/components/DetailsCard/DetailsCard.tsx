@@ -1,7 +1,7 @@
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { IAnimal } from '../../types';
+import { IAnimal } from '@/types';
 import { useEffect, useState } from 'react';
-import getAnimalByUid from '../../util/getAnimalByUid';
+import getAnimalByUid from '@/util/getAnimalByUid';
 
 export default function DetailsCard(): React.JSX.Element {
   const params = useParams();

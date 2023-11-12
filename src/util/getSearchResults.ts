@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { IAnimalsResponse } from '../types';
+import { IAnimalsResponse } from '@/types';
 
 export default async function getSearchResults(
   searchValue: string,

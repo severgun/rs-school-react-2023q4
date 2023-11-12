@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import { NavLink, useNavigate, useSearchParams } from 'react-router-dom';
-import getSearchResults from '../../util/getSearchResults';
-import { IAnimalsResponse } from '../../types';
+import getSearchResults from '@/util/getSearchResults';
+import { IAnimalsResponse } from '@/types';
 
 interface IPaginationState {
   currentPage: number;
