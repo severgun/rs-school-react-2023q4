@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
+import App from '@/App';
 import {
   Route,
   RouterProvider,
   createBrowserRouter,
   createRoutesFromElements,
 } from 'react-router-dom';
-import { DetailsCard } from './components';
+import { DetailsCard } from '@/components';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
