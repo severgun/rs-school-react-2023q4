@@ -111,4 +111,20 @@ export const handlers = [
 
     return HttpResponse.json(resp);
   }),
+
+  http.get('https://stapi.co/api/v1/rest/animal', () => {
+    const resp = {
+      animal: {
+        uid: 'ANMA0000032315',
+        name: "'Owon",
+        earthAnimal: false,
+        earthInsect: false,
+        avian: false,
+        canine: false,
+        feline: false,
+      },
+    };
+
+    return HttpResponse.json(resp);
+  }),
 ];

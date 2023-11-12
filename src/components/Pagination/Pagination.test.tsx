@@ -1,34 +1,13 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import Pagination from './Pagination';
 import { BrowserRouter } from 'react-router-dom';
-import { SearchContext } from '@/context/SearchContext';
-import { IAnimalsResponse } from '@/types';
-import React, { useState } from 'react';
 import { HttpResponse, http } from 'msw';
 import { server } from '@/mocks/node';
+import { SearchContextWrapper } from '@/mocks/wrappers';
 
-describe('Test Pagination component', () => {
+describe('Pagination component tests', () => {
   test('should render cards as set by combobox', async () => {
-    const AllWrappers = ({
-      children,
-    }: {
-      children: React.ReactNode;
-    }): React.JSX.Element => {
-      const searchValueState = useState<string>('');
-      const searchResultsState = useState<IAnimalsResponse | null>(null);
-
-      return (
-        <BrowserRouter>
-          <SearchContext.Provider
-            value={{ searchValueState, searchResultsState }}
-          >
-            {children}
-          </SearchContext.Provider>
-        </BrowserRouter>
-      );
-    };
-
-    render(<Pagination />, { wrapper: AllWrappers });
+    render(<Pagination />, { wrapper: SearchContextWrapper });
 
     const itemsPerPage = screen.getByRole<HTMLSelectElement>('combobox');
     await waitFor(() => {
@@ -55,25 +34,6 @@ describe('Test Pagination component', () => {
   });
 
   test('not found message should appear if search return empty result', async () => {
-    const AllWrappers = ({
-      children,
-    }: {
-      children: React.ReactNode;
-    }): React.JSX.Element => {
-      const searchValueState = useState<string>('');
-      const searchResultsState = useState<IAnimalsResponse | null>(null);
-
-      return (
-        <BrowserRouter>
-          <SearchContext.Provider
-            value={{ searchValueState, searchResultsState }}
-          >
-            {children}
-          </SearchContext.Provider>
-        </BrowserRouter>
-      );
-    };
-
     const handlerEmpyResult = http.post(
       'https://stapi.co/api/v1/rest/animal/search',
       () => {
@@ -99,12 +59,22 @@ describe('Test Pagination component', () => {
 
     server.use(handlerEmpyResult);
 
-    render(<Pagination />, { wrapper: AllWrappers });
+    render(<Pagination />, { wrapper: SearchContextWrapper });
 
     await waitFor(() => {
       expect(
         screen.queryByText('Sorry! Nothing was found')
       ).toBeInTheDocument();
+    });
+  });
+
+  test('should render valid data in card', async () => {
+    render(<Pagination />, { wrapper: SearchContextWrapper });
+
+    await waitFor(() => {
+      const firstCard = screen.queryAllByRole('listitem')[0];
+
+      expect(firstCard).toHaveTextContent("'Owon");
     });
   });
 });
