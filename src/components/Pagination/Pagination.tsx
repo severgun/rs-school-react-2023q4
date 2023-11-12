@@ -8,7 +8,7 @@ interface IPaginationState {
   itemsPerPage: number;
 }
 
-export default function Pagination() {
+export default function Pagination(): React.JSX.Element {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 

@@ -3,7 +3,7 @@ import { IAnimal } from '../../types';
 import { useEffect, useState } from 'react';
 import getAnimalByUid from '../../util/getAnimalByUid';
 
-export default function DetailsCard() {
+export default function DetailsCard(): React.JSX.Element {
   const params = useParams();
   const [searchParams] = useSearchParams();
   const [animalDetailsState, setAnimalDetailsState] = useState<IAnimal>();
