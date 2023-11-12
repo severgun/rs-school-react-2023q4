@@ -133,7 +133,7 @@ export default function Pagination(): React.JSX.Element {
         >
           &lt;
         </button>
-        <span>{paginationState.currentPage}</span>{' '}
+        <span>{paginationState.currentPage}</span>
         <button
           disabled={searchResults?.page.lastPage}
           onClick={handleNextPage}
