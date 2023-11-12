@@ -32,12 +32,14 @@ export default function DetailsCard(): React.JSX.Element {
             <h4>Details:</h4>
             <ul>
               <li>
-                Earth Animal:{' '}
-                {animalDetailsState.earthAnimal ? 'True' : 'False'}
+                {`Earth Animal: ${
+                  animalDetailsState.earthAnimal ? 'True' : 'False'
+                }`}
               </li>
               <li>
-                Earth Insect:{' '}
-                {animalDetailsState.earthInsect ? 'True' : 'False'}
+                {`Earth Insect: ${
+                  animalDetailsState.earthInsect ? 'True' : 'False'
+                }`}
               </li>
               <li>
                 It is avian: {animalDetailsState.avian ? 'True' : 'False'}
