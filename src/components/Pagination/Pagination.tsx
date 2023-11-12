@@ -1,4 +1,4 @@
-import { ChangeEvent, useContext, useEffect, useState } from 'react';
+import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { NavLink, useNavigate, useSearchParams } from 'react-router-dom';
 import getSearchResults from '@/util/getSearchResults';
 import { IAnimalsResponse } from '@/types';
@@ -106,6 +106,18 @@ export default function Pagination(): React.JSX.Element {
     ));
   };
 
+  const handleListRender = (): React.ReactNode => {
+    if (loading) {
+      return 'Loading...';
+    } else {
+      if (searchResults && searchResults.animals.length === 0) {
+        return 'Sorry! Nothing was found';
+      } else {
+        return searchResults && <ul>{getListOfAnimals(searchResults)}</ul>;
+      }
+    }
+  };
+
   return (
     <div
       onClick={(e) => {
@@ -139,11 +151,7 @@ export default function Pagination(): React.JSX.Element {
           <option value="20">20</option>
         </select>
       </div>
-      <div>
-        {loading
-          ? 'Loading...'
-          : searchResults && <ul>{getListOfAnimals(searchResults)}</ul>}
-      </div>
+      <div>{handleListRender()}</div>
     </div>
   );
 }

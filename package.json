@@ -12,7 +12,8 @@
     "prepare": "husky install",
     "test": "vitest run",
     "test:ui": "vitest --ui",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:coverage": "npm run test -- --coverage"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --fix",
@@ -45,6 +46,7 @@
     "husky": "^8.0.0",
     "jsdom": "^22.1.0",
     "lint-staged": "^15.0.2",
+    "msw": "^2.0.5",
     "prettier": "^3.0.3",
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
