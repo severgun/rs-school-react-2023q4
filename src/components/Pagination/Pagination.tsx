@@ -1,7 +1,8 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { NavLink, useNavigate, useSearchParams } from 'react-router-dom';
 import getSearchResults from '@/util/getSearchResults';
 import { IAnimalsResponse } from '@/types';
+import { SearchContext } from '@/context/SearchContext';
 
 interface IPaginationState {
   currentPage: number;
@@ -10,11 +11,12 @@ interface IPaginationState {
 
 export default function Pagination(): React.JSX.Element {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [searchResults, setSearchResults] = useState<IAnimalsResponse | null>(
-    null
-  );
+  const { searchValueState, searchResultsState } = useContext(SearchContext);
+  const [searchValue] = searchValueState;
+  const [searchResults, setSearchResults] = searchResultsState;
+
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [paginationState, setPaginationState] = useState<IPaginationState>({
     currentPage: parseInt(searchParams.get('page') || '1'),
@@ -33,18 +35,25 @@ export default function Pagination(): React.JSX.Element {
       setLoading(true);
 
       const res = await getSearchResults(
-        searchParams.get('search') || '',
+        searchValue || '',
         pageNum,
         paginationState.itemsPerPage
       );
 
-      setSearchResults(res);
+      if (setSearchResults !== undefined) {
+        setSearchResults(res);
+      }
 
       setLoading(false);
     };
 
     getPageData();
-  }, [searchParams, paginationState.itemsPerPage]);
+  }, [
+    searchValue,
+    setSearchResults,
+    searchParams,
+    paginationState.itemsPerPage,
+  ]);
 
   const handleItemsPerPageChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setPaginationState({

@@ -1,21 +1,23 @@
-import React, { useState } from 'react';
+import { SearchContext } from '@/context/SearchContext';
+import React, { useContext } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 export default function Header(): React.JSX.Element {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [searchValue, setSearchValue] = useState(
-    searchParams.get('search') || ''
-  );
+  const { searchValueState } = useContext(SearchContext);
+  const [, setSearchParams] = useSearchParams();
+  const [searchValue, setSearchValue] = searchValueState;
 
   const handleSearch = () => {
     setSearchParams({
-      search: searchValue,
+      search: searchValue || '',
       page: '1',
     });
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(event.target.value);
+    if (setSearchValue !== undefined) {
+      setSearchValue(event.target.value);
+    }
   };
 
   return (
