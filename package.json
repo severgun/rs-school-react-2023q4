@@ -10,7 +10,7 @@
     "format:fix": "prettier --write .",
     "preview": "vite preview",
     "prepare": "husky install",
-    "test": "vitest run",
+    "test": "vitest run --reporter verbose",
     "test:ui": "vitest --ui",
     "test:watch": "vitest",
     "test:coverage": "npm run test -- --coverage"
