@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import Pagination from './Pagination';
 import { BrowserRouter } from 'react-router-dom';
 import { HttpResponse, http } from 'msw';
@@ -76,5 +76,15 @@ describe('Pagination component tests', () => {
 
       expect(firstCard).toHaveTextContent("'Owon");
     });
+  });
+
+  test('click on pagination buttons should change query params', async () => {
+    render(<Pagination />, { wrapper: SearchContextWrapper });
+
+    const nextPageButton = screen.getByRole('button', { name: '>' });
+
+    fireEvent.click(nextPageButton);
+
+    expect(window.location.toString().includes('page=2')).toBeTruthy();
   });
 });

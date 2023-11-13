@@ -14,7 +14,6 @@ export default async function getAnimalByUid(
       return null;
     }
   } catch (error) {
-    console.error('API Request Failed', error);
     return null;
   }
 }

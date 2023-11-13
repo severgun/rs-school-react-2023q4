@@ -26,7 +26,7 @@ export default async function getSearchResults(
       return null;
     }
   } catch (error) {
-    console.error('API Request Failed', error);
+    //console.error('API Request Failed', error);
     return null;
   }
 }
