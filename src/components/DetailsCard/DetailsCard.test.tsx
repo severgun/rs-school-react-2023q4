@@ -26,7 +26,7 @@ vi.mock('react-router-dom', async () => {
 });
 
 describe('DetailsCard component tests', () => {
-  test('should display loading indicator is displayed while fetching data', () => {
+  test('should display loading indicator while fetching data', () => {
     render(<DetailsCard />, { wrapper: BrowserRouter });
 
     const loadingMessage = screen.queryByText('Loading...');
