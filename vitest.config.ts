@@ -21,6 +21,7 @@ export default defineConfig({
       exclude: [
         ...coverageConfigDefaults.exclude,
         'src/main.tsx',
+        'src/types.ts',
         'src/**/*.d.ts',
       ],
     },
