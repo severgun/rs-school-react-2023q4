@@ -1,20 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Header, Main } from '@/components';
-import { SearchContext } from '@/context/SearchContext';
-import { useSearchParams } from 'react-router-dom';
-import { IAnimalsResponse } from './types';
+import { Provider } from 'react-redux';
+import { store } from '@/store/store';
 
 export default function App(): React.JSX.Element {
-  const [searchParams] = useSearchParams();
-  const searchValueState = useState<string>(searchParams.get('search') ?? '');
-  const searchResultsState = useState<IAnimalsResponse | null>(null);
-
   return (
     <>
-      <SearchContext.Provider value={{ searchValueState, searchResultsState }}>
+      <Provider store={store}>
         <Header />
         <Main />
-      </SearchContext.Provider>
+      </Provider>
     </>
   );
 }

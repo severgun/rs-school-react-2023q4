@@ -1,32 +1,42 @@
-import { SearchContext } from '@/context/SearchContext';
-import React, { useContext, useEffect } from 'react';
+import { useGetAnimalsBySearchValueMutation } from '@/services/animalsApi';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { selectItemsPerPage } from '@/store/slices/itemsPerPageSlice';
+import { setSearchValue } from '@/store/slices/searchValueSlice';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 export default function Header(): React.JSX.Element {
-  const { searchValueState } = useContext(SearchContext);
-  const [, setSearchParams] = useSearchParams();
-  const [searchValue, setSearchValue] = searchValueState;
+  const [searchInputState, setSearchInputState] = useState<string>('');
+  const dispatch = useAppDispatch();
+  const { itemsPerPage } = useAppSelector(selectItemsPerPage);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [getAnimalsBySearchValue] = useGetAnimalsBySearchValueMutation();
 
   useEffect(() => {
-    const savedValue = localStorage.getItem('searchValue') || '';
-    if (setSearchValue !== undefined) {
-      setSearchValue(savedValue);
+    const searchValue = searchParams.get('search');
+    if (searchValue) {
+      setSearchInputState(searchValue);
+      dispatch(setSearchValue(searchValue));
     }
-  }, [setSearchValue]);
+  }, [dispatch, searchParams]);
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     setSearchParams({
-      search: searchValue || '',
+      search: searchInputState || '',
       page: '1',
     });
 
-    localStorage.setItem('searchValue', searchValue || '');
+    await getAnimalsBySearchValue({
+      searchValue: searchInputState,
+      pageNum: 1,
+      pageSize: itemsPerPage,
+    });
+
+    dispatch(setSearchValue(searchInputState));
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (setSearchValue !== undefined) {
-      setSearchValue(event.target.value);
-    }
+    setSearchInputState(event.target.value);
   };
 
   return (
@@ -38,7 +48,7 @@ export default function Header(): React.JSX.Element {
             type="text"
             name="search"
             placeholder="Type your request..."
-            value={searchValue}
+            value={searchInputState}
             onChange={handleChange}
           />
         </label>

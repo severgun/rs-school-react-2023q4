@@ -1,65 +1,45 @@
-import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { NavLink, useNavigate, useSearchParams } from 'react-router-dom';
-import getSearchResults from '@/util/getSearchResults';
 import { IAnimalsResponse } from '@/types';
-import { SearchContext } from '@/context/SearchContext';
-
-interface IPaginationState {
-  currentPage: number;
-  itemsPerPage: number;
-}
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { selectSearchValue } from '@/store/slices/searchValueSlice';
+import {
+  selectItemsPerPage,
+  setItemsPerPageValue,
+} from '@/store/slices/itemsPerPageSlice';
+import { useGetAnimalsBySearchValueMutation } from '@/services/animalsApi';
 
 export default function Pagination(): React.JSX.Element {
   const navigate = useNavigate();
-
-  const { searchValueState, searchResultsState } = useContext(SearchContext);
-  const [searchValue] = searchValueState;
-  const [searchResults, setSearchResults] = searchResultsState;
-
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const { itemsPerPage } = useAppSelector(selectItemsPerPage);
+  const { searchValue } = useAppSelector(selectSearchValue);
+  const dispatch = useAppDispatch();
+  const [searchResults, setSearchResults] = useState<IAnimalsResponse | null>(
+    null
+  );
+  const [getAnimalsBySearchValue, { isLoading }] =
+    useGetAnimalsBySearchValueMutation();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [paginationState, setPaginationState] = useState<IPaginationState>({
-    currentPage: parseInt(searchParams.get('page') || '1'),
-    itemsPerPage: 10,
-  });
-
-  const [loading, setLoading] = useState(false);
-
   useEffect(() => {
-    const pageNum = parseInt(searchParams.get('page') || '1');
-    setPaginationState((paginationState) => {
-      return { ...paginationState, currentPage: pageNum };
-    });
+    const getSearchResults = async () => {
+      const data = await getAnimalsBySearchValue({
+        searchValue,
+        pageNum: currentPage,
+        pageSize: itemsPerPage,
+      }).unwrap();
 
-    const getPageData = async () => {
-      setLoading(true);
-
-      const res = await getSearchResults(
-        searchValue || '',
-        pageNum,
-        paginationState.itemsPerPage
-      );
-
-      if (setSearchResults !== undefined) {
-        setSearchResults(res);
-      }
-
-      setLoading(false);
+      setSearchResults(data);
     };
 
-    getPageData();
-  }, [
-    searchValue,
-    setSearchResults,
-    searchParams,
-    paginationState.itemsPerPage,
-  ]);
+    getSearchResults();
+  }, [currentPage, getAnimalsBySearchValue, itemsPerPage, searchValue]);
 
   const handleItemsPerPageChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setPaginationState({
-      ...paginationState,
-      itemsPerPage: +event.target.value,
-    });
+    dispatch(setItemsPerPageValue(+event.target.value));
+
+    setCurrentPage(1);
 
     setSearchParams((searchParams) => {
       searchParams.set('page', '1');
@@ -68,27 +48,25 @@ export default function Pagination(): React.JSX.Element {
   };
 
   const handlePrevPage = async () => {
-    const prevPageNum =
-      paginationState.currentPage > 1 ? paginationState.currentPage - 1 : 1;
+    const prevPageNum = currentPage > 1 ? currentPage - 1 : 1;
 
     setSearchParams((searchParams) => {
       searchParams.set('page', prevPageNum.toString());
       return searchParams;
     });
+
+    setCurrentPage(prevPageNum);
   };
 
   const handleNextPage = () => {
-    const nextPageNum = paginationState.currentPage + 1;
+    const nextPageNum = currentPage + 1;
 
     setSearchParams((searchParams) => {
       searchParams.set('page', nextPageNum.toString());
       return searchParams;
     });
 
-    setPaginationState({
-      ...paginationState,
-      currentPage: nextPageNum,
-    });
+    setCurrentPage(nextPageNum);
   };
 
   const getListOfAnimals = (searchResults: IAnimalsResponse) => {
@@ -107,7 +85,7 @@ export default function Pagination(): React.JSX.Element {
   };
 
   const handleListRender = (): React.ReactNode => {
-    if (loading) {
+    if (isLoading) {
       return 'Loading...';
     } else {
       if (searchResults && searchResults.animals.length === 0) {
@@ -133,7 +111,7 @@ export default function Pagination(): React.JSX.Element {
         >
           &lt;
         </button>
-        <span>{paginationState.currentPage}</span>
+        <span>{currentPage}</span>
         <button
           disabled={searchResults?.page.lastPage}
           onClick={handleNextPage}
@@ -144,6 +122,7 @@ export default function Pagination(): React.JSX.Element {
         <select
           name="items-per-page"
           id="items-per-page"
+          value={itemsPerPage}
           onChange={(e) => handleItemsPerPageChange(e)}
         >
           <option value="10">10</option>

@@ -3,11 +3,10 @@ import Pagination from './Pagination';
 import { BrowserRouter } from 'react-router-dom';
 import { HttpResponse, http } from 'msw';
 import { server } from '@/mocks/node';
-import { SearchContextWrapper } from '@/mocks/wrappers';
 
 describe('Pagination component tests', () => {
   test('should render cards as set by combobox', async () => {
-    render(<Pagination />, { wrapper: SearchContextWrapper });
+    render(<Pagination />, { wrapper: BrowserRouter });
 
     const itemsPerPage = screen.getByRole<HTMLSelectElement>('combobox');
     await waitFor(() => {
@@ -59,7 +58,7 @@ describe('Pagination component tests', () => {
 
     server.use(handlerEmpyResult);
 
-    render(<Pagination />, { wrapper: SearchContextWrapper });
+    render(<Pagination />, { wrapper: BrowserRouter });
 
     await waitFor(() => {
       expect(
@@ -69,7 +68,7 @@ describe('Pagination component tests', () => {
   });
 
   test('should render valid data in card', async () => {
-    render(<Pagination />, { wrapper: SearchContextWrapper });
+    render(<Pagination />, { wrapper: BrowserRouter });
 
     await waitFor(() => {
       const firstCard = screen.queryAllByRole('listitem')[0];
@@ -79,7 +78,7 @@ describe('Pagination component tests', () => {
   });
 
   test('click on pagination buttons should change query params', async () => {
-    render(<Pagination />, { wrapper: SearchContextWrapper });
+    render(<Pagination />, { wrapper: BrowserRouter });
 
     const nextPageButton = screen.getByRole('button', { name: '>' });
 
