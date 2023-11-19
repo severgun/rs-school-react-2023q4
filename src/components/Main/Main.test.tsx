@@ -1,6 +1,5 @@
 import { routesConfig } from '@/routes/routes';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import axios from 'axios';
 import {
   RouterProvider,
   createBrowserRouter,
@@ -78,18 +77,5 @@ describe('App tests', () => {
     render(<RouterProvider router={router} />);
 
     expect(screen.getByText('Not Found')).toBeInTheDocument();
-  });
-
-  test('click on card link should cause API call', async () => {
-    const axiosGet = vi.spyOn(axios, 'get');
-
-    renderAppWithBrowserRouter();
-
-    const link = await screen.findByRole('link', { name: "'Owon" });
-    fireEvent.click(link);
-
-    expect(axiosGet).toHaveBeenCalledWith(
-      'https://stapi.co/api/v1/rest/animal?uid=ANMA0000032315'
-    );
   });
 });

@@ -1,12 +1,12 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import Pagination from './Pagination';
-import { BrowserRouter } from 'react-router-dom';
 import { HttpResponse, http } from 'msw';
 import { server } from '@/mocks/node';
+import { ProviderWrapper } from '@/mocks/wrapper';
 
 describe('Pagination component tests', () => {
   test('should render cards as set by combobox', async () => {
-    render(<Pagination />, { wrapper: BrowserRouter });
+    render(<Pagination />, { wrapper: ProviderWrapper });
 
     const itemsPerPage = screen.getByRole<HTMLSelectElement>('combobox');
     await waitFor(() => {
@@ -17,7 +17,7 @@ describe('Pagination component tests', () => {
   });
 
   test('loading message should be visible while waiting for request results', async () => {
-    render(<Pagination />, { wrapper: BrowserRouter });
+    render(<Pagination />, { wrapper: ProviderWrapper });
 
     const loadingMessage = screen.queryByText('Loading...');
 
@@ -25,7 +25,7 @@ describe('Pagination component tests', () => {
   });
 
   test('loading message should dissapear after getting request results', async () => {
-    render(<Pagination />, { wrapper: BrowserRouter });
+    render(<Pagination />, { wrapper: ProviderWrapper });
 
     await waitFor(() => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
@@ -58,7 +58,7 @@ describe('Pagination component tests', () => {
 
     server.use(handlerEmpyResult);
 
-    render(<Pagination />, { wrapper: BrowserRouter });
+    render(<Pagination />, { wrapper: ProviderWrapper });
 
     await waitFor(() => {
       expect(
@@ -68,7 +68,7 @@ describe('Pagination component tests', () => {
   });
 
   test('should render valid data in card', async () => {
-    render(<Pagination />, { wrapper: BrowserRouter });
+    render(<Pagination />, { wrapper: ProviderWrapper });
 
     await waitFor(() => {
       const firstCard = screen.queryAllByRole('listitem')[0];
@@ -78,7 +78,7 @@ describe('Pagination component tests', () => {
   });
 
   test('click on pagination buttons should change query params', async () => {
-    render(<Pagination />, { wrapper: BrowserRouter });
+    render(<Pagination />, { wrapper: ProviderWrapper });
 
     const nextPageButton = screen.getByRole('button', { name: '>' });
 

@@ -1,33 +1,18 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import Header from './Header';
-import { BrowserRouter } from 'react-router-dom';
+import { ProviderWrapper } from '@/mocks/wrapper';
 
 describe('Header component tests', () => {
-  test('should save search value to localStorage', () => {
-    localStorage.removeItem('searchValue');
-
-    render(<Header />, { wrapper: BrowserRouter });
-
+  test('should set search params on button search click', () => {
+    render(<Header />, { wrapper: ProviderWrapper });
     const searchField = screen.getByRole<HTMLInputElement>('textbox');
     const searchButton = screen.getByRole('button', {
       name: 'Search',
     });
-
     fireEvent.change(searchField, { target: { value: 'test' } });
     fireEvent.click(searchButton);
+    const searchParams = new URL(document.location.toString()).searchParams;
 
-    const storedValue = localStorage.getItem('searchValue');
-
-    expect(storedValue).toEqual('test');
-  });
-
-  test('should load search from localStorage', () => {
-    const storedValue = localStorage.getItem('searchValue');
-
-    render(<Header />, { wrapper: BrowserRouter });
-
-    const searchField = screen.getByRole<HTMLInputElement>('textbox');
-
-    expect(searchField.value).toEqual(storedValue);
+    expect(searchParams.get('search')).toEqual('test');
   });
 });

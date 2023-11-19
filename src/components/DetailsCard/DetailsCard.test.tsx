@@ -1,14 +1,14 @@
-import { BrowserRouter } from 'react-router-dom';
 import DetailsCard from './DetailsCard';
 import { screen, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { ProviderWrapper } from '@/mocks/wrapper';
 
 const renderWithRouter = (ui: JSX.Element, { route = '/' } = {}) => {
   window.history.pushState({}, 'Test page', route);
 
   return {
     user: userEvent.setup(),
-    ...render(ui, { wrapper: BrowserRouter }),
+    ...render(ui, { wrapper: ProviderWrapper }),
   };
 };
 
@@ -27,7 +27,7 @@ vi.mock('react-router-dom', async () => {
 
 describe('DetailsCard component tests', () => {
   test('should display loading indicator while fetching data', () => {
-    render(<DetailsCard />, { wrapper: BrowserRouter });
+    render(<DetailsCard />, { wrapper: ProviderWrapper });
 
     const loadingMessage = screen.queryByText('Loading...');
 
