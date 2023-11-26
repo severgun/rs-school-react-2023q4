@@ -24,5 +24,10 @@ export const getServerSideProps = (async (context) => {
 }) satisfies GetServerSideProps<PropsType>;
 
 export default function Home({ data }: PropsType): React.JSX.Element {
-  return <Pagination data={data} />;
+  return (
+    <>
+      <h1>Star Track Animals</h1>
+      <Pagination data={data} />
+    </>
+  );
 }

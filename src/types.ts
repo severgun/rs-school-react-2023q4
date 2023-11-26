@@ -8,6 +8,16 @@ export interface IAnimal {
   uid: string;
 }
 
+export interface ResponseSort {
+  clauses: ResponseSortClause[];
+}
+
+export interface ResponseSortClause {
+  name: string;
+  direction: "ASC" | "DESC";
+  clauseOrder: number;
+}
+
 export interface IAnimalFullResponse {
   animal: IAnimal;
 }
@@ -15,7 +25,7 @@ export interface IAnimalFullResponse {
 export interface IAnimalsResponse {
   animals: IAnimal[];
   page: ResponsePage;
-  sort: string | null;
+  sort: ResponseSort;
 }
 
 export interface ResponsePage {
@@ -26,14 +36,4 @@ export interface ResponsePage {
   totalPages: number;
   firstPage: boolean;
   lastPage: boolean;
-}
-
-export interface ResponseSort {
-  clauses: ResponseSortClause[];
-}
-
-export interface ResponseSortClause {
-  name: string;
-  direction: "ASC" | "DESC";
-  clauseOrder: number;
 }

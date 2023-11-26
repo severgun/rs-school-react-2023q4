@@ -30,6 +30,8 @@ export default function Pagination({ data }: PropsType): React.JSX.Element {
   };
 
   const handlePrevPage = (): void => {
+    console.log("WWWWWWWWWWWWW");
+
     router.push({
       pathname: "/",
       query: {
@@ -41,6 +43,8 @@ export default function Pagination({ data }: PropsType): React.JSX.Element {
   };
 
   const handleNextPage = (): void => {
+    console.log("DDDDDDDDDDDDDDDDDDDDDDDD");
+
     router.push({
       pathname: "/",
       query: {

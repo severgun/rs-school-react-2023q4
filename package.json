@@ -12,7 +12,7 @@
     "test": "vitest run --reporter verbose",
     "test:ui": "vitest --ui",
     "test:watch": "vitest",
-    "test:coverage": "npm run test -- --coverage"
+    "test:coverage": "npm run test -- --coverage.enabled --coverage.provider=v8 --coverage.all"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --fix",
@@ -39,6 +39,7 @@
     "jsdom": "^22.1.0",
     "lint-staged": "^15.1.0",
     "msw": "^2.0.9",
+    "next-router-mock": "^0.9.10",
     "prettier": "^3.1.0",
     "typescript": "^5",
     "vitest": "^0.34.6"

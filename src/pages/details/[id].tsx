@@ -33,9 +33,12 @@ export default function Details({
   detailsData,
 }: PropsType): React.JSX.Element {
   return (
-    <div className={styles.content}>
-      <Pagination data={searchResults} />
-      <DetailsCard data={detailsData} />
-    </div>
+    <>
+      <h1>Star Track Animals</h1>
+      <div className={styles.content}>
+        <Pagination data={searchResults} />
+        <DetailsCard data={detailsData} />
+      </div>
+    </>
   );
 }

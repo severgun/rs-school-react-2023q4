@@ -1,5 +1,4 @@
 import { BASE_API_URL, ENDPOINTS, HTTP_METHODS } from "@/constants";
-import { IAnimalFullResponse } from "@/types";
 
 export const getAnimalByUid = async (
   uid: string | string[]
