@@ -1,136 +1,121 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
-import { NavLink, useNavigate, useSearchParams } from 'react-router-dom';
-import { IAnimalsResponse } from '@/types';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { selectSearchValue } from '@/store/slices/searchValueSlice';
-import {
-  selectItemsPerPage,
-  setItemsPerPageValue,
-} from '@/store/slices/itemsPerPageSlice';
-import { useGetAnimalsBySearchValueMutation } from '@/services/animalsApi';
+import { IAnimalsResponse } from "@/types";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React from "react";
 
-export default function Pagination(): React.JSX.Element {
-  const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const { itemsPerPage } = useAppSelector(selectItemsPerPage);
-  const { searchValue } = useAppSelector(selectSearchValue);
-  const dispatch = useAppDispatch();
-  const [searchResults, setSearchResults] = useState<IAnimalsResponse | null>(
-    null
-  );
-  const [getAnimalsBySearchValue, { isLoading }] =
-    useGetAnimalsBySearchValueMutation();
-  const [searchParams, setSearchParams] = useSearchParams();
+type PaginationProps = {
+  data: IAnimalsResponse;
+};
 
-  useEffect(() => {
-    const getSearchResults = async () => {
-      const data = await getAnimalsBySearchValue({
-        searchValue,
-        pageNum: currentPage,
-        pageSize: itemsPerPage,
-      }).unwrap();
+export const enum ITEMS_PER_PAGE {
+  Ten = 10,
+  Fifteen = 15,
+  Twenty = 20,
+  MIN = Ten,
+  MAX = Twenty,
+}
 
-      setSearchResults(data);
-    };
+export default function Pagination({
+  data,
+}: PaginationProps): React.JSX.Element {
+  const router = useRouter();
+  const { search, pageNum, pageSize } = router.query;
 
-    getSearchResults();
-  }, [currentPage, getAnimalsBySearchValue, itemsPerPage, searchValue]);
-
-  const handleItemsPerPageChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    dispatch(setItemsPerPageValue(+event.target.value));
-
-    setCurrentPage(1);
-
-    setSearchParams((searchParams) => {
-      searchParams.set('page', '1');
-      return searchParams;
+  const handleItemsPerPageChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ): void => {
+    router.push({
+      pathname: router.pathname,
+      query: {
+        search,
+        pageNum: getCurrentPage(),
+        pageSize: event.target.value,
+      },
     });
   };
 
-  const handlePrevPage = async () => {
-    const prevPageNum = currentPage > 1 ? currentPage - 1 : 1;
-
-    setSearchParams((searchParams) => {
-      searchParams.set('page', prevPageNum.toString());
-      return searchParams;
+  const handlePrevPage = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ): void => {
+    router.push({
+      pathname: router.pathname,
+      query: {
+        search,
+        pageNum: getCurrentPage() - 1,
+        pageSize,
+      },
     });
-
-    setCurrentPage(prevPageNum);
   };
 
-  const handleNextPage = () => {
-    const nextPageNum = currentPage + 1;
-
-    setSearchParams((searchParams) => {
-      searchParams.set('page', nextPageNum.toString());
-      return searchParams;
+  const handleNextPage = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ): void => {
+    router.push({
+      pathname: router.pathname,
+      query: {
+        search,
+        pageNum: getCurrentPage() + 1,
+        pageSize,
+      },
     });
-
-    setCurrentPage(nextPageNum);
   };
 
-  const getListOfAnimals = (searchResults: IAnimalsResponse) => {
-    return searchResults.animals.map((item) => (
-      <li key={item.uid}>
-        <NavLink
-          to={{
-            pathname: `details/${item.uid}`,
-            search: searchParams.toString(),
-          }}
-        >
-          {item.name}
-        </NavLink>
-      </li>
-    ));
+  const getCurrentPage = (): number => {
+    const currentPage = Array.isArray(pageNum)
+      ? 1
+      : parseInt(pageNum ?? "1") || 1;
+
+    return currentPage > 0 ? currentPage : 1;
   };
 
-  const handleListRender = (): React.ReactNode => {
-    if (isLoading) {
-      return 'Loading...';
-    } else {
-      if (searchResults && searchResults.animals.length === 0) {
-        return 'Sorry! Nothing was found';
-      } else {
-        return searchResults && <ul>{getListOfAnimals(searchResults)}</ul>;
-      }
-    }
+  const getItemsPerPage = (): number => {
+    const currentPageSize = Array.isArray(pageSize)
+      ? ITEMS_PER_PAGE.MIN
+      : parseInt(pageSize ?? "1") || 1;
+
+    return currentPageSize >= ITEMS_PER_PAGE.MIN &&
+      currentPageSize <= ITEMS_PER_PAGE.MAX
+      ? currentPageSize
+      : ITEMS_PER_PAGE.MIN;
   };
+
+  if (data.animals.length === 0) {
+    return <p>Nothing was found.</p>;
+  }
 
   return (
-    <div
-      onClick={(e) => {
-        if ((e.target as HTMLElement).tagName !== 'A') {
-          navigate({ pathname: '/', search: searchParams.toString() });
-        }
-      }}
-    >
+    <div>
       <div>
-        <button
-          disabled={searchResults?.page.firstPage}
-          onClick={handlePrevPage}
-        >
+        <button disabled={data?.page.firstPage} onClick={handlePrevPage}>
           &lt;
         </button>
-        <span>{currentPage}</span>
-        <button
-          disabled={searchResults?.page.lastPage}
-          onClick={handleNextPage}
-        >
+        <span>{getCurrentPage()}</span>
+        <button disabled={data?.page.lastPage} onClick={handleNextPage}>
           &gt;
         </button>
         <label htmlFor="items-per-page">Items Per Page:</label>
         <select
           name="items-per-page"
           id="items-per-page"
-          value={itemsPerPage}
-          onChange={(e) => handleItemsPerPageChange(e)}
+          value={getItemsPerPage()}
+          onChange={handleItemsPerPageChange}
         >
-          <option value="10">10</option>
-          <option value="15">15</option>
-          <option value="20">20</option>
+          <option value={ITEMS_PER_PAGE.Ten}>{ITEMS_PER_PAGE.Ten}</option>
+          <option value={ITEMS_PER_PAGE.Fifteen}>
+            {ITEMS_PER_PAGE.Fifteen}
+          </option>
+          <option value={ITEMS_PER_PAGE.Twenty}>{ITEMS_PER_PAGE.Twenty}</option>
         </select>
       </div>
-      <div>{handleListRender()}</div>
+      <ul>
+        {data.animals.map((animal) => (
+          <li key={animal.uid}>
+            <Link href={`/details/${encodeURIComponent(animal.uid)}`}>
+              {animal.name}
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

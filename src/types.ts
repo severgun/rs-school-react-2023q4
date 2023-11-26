@@ -34,6 +34,6 @@ export interface ResponseSort {
 
 export interface ResponseSortClause {
   name: string;
-  direction: 'ASC' | 'DESC';
+  direction: "ASC" | "DESC";
   clauseOrder: number;
 }

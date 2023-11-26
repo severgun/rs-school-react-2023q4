@@ -1,6 +1,5 @@
-import Header from './Header/Header';
-import Main from './Main/Main';
-import Pagination from './Pagination/Pagination';
-import DetailsCard from './DetailsCard/DetailsCard';
+import Header from "./Header/Header";
+import Layout from "./Layout/Layout";
+import Search from "./Search/Search";
 
-export { Header, Main, Pagination, DetailsCard };
+export { Header, Layout, Search };
