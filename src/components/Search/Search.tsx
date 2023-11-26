@@ -1,7 +1,7 @@
 // import { usePathname, useSearchParams } from "next/navigation";
+import { ITEMS_PER_PAGE } from "@/constants";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { ITEMS_PER_PAGE } from "../Pagination/Pagination";
 
 export default function Search(): React.JSX.Element {
   const [searchInputState, setSearchInputState] = useState<string>("");

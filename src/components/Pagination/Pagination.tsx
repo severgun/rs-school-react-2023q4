@@ -1,61 +1,52 @@
+import { ITEMS_PER_PAGE } from "@/constants";
 import { IAnimalsResponse } from "@/types";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 
-type PaginationProps = {
+type PropsType = {
   data: IAnimalsResponse;
 };
 
-export const enum ITEMS_PER_PAGE {
-  Ten = 10,
-  Fifteen = 15,
-  Twenty = 20,
-  MIN = Ten,
-  MAX = Twenty,
-}
-
-export default function Pagination({
-  data,
-}: PaginationProps): React.JSX.Element {
+export default function Pagination({ data }: PropsType): React.JSX.Element {
   const router = useRouter();
-  const { search, pageNum, pageSize } = router.query;
+  const {
+    search = "",
+    pageNum = "1",
+    pageSize = ITEMS_PER_PAGE.MIN.toString(),
+  } = router.query;
 
   const handleItemsPerPageChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ): void => {
     router.push({
-      pathname: router.pathname,
+      pathname: "/",
       query: {
         search,
-        pageNum: getCurrentPage(),
+        pageNum: 1,
         pageSize: event.target.value,
       },
     });
   };
 
-  const handlePrevPage = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ): void => {
+  const handlePrevPage = (): void => {
     router.push({
-      pathname: router.pathname,
+      pathname: "/",
       query: {
         search,
         pageNum: getCurrentPage() - 1,
-        pageSize,
+        pageSize: pageSize ?? ITEMS_PER_PAGE.MIN,
       },
     });
   };
 
-  const handleNextPage = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ): void => {
+  const handleNextPage = (): void => {
     router.push({
-      pathname: router.pathname,
+      pathname: "/",
       query: {
         search,
         pageNum: getCurrentPage() + 1,
-        pageSize,
+        pageSize: pageSize ?? ITEMS_PER_PAGE.MIN,
       },
     });
   };
@@ -110,7 +101,11 @@ export default function Pagination({
       <ul>
         {data.animals.map((animal) => (
           <li key={animal.uid}>
-            <Link href={`/details/${encodeURIComponent(animal.uid)}`}>
+            <Link
+              href={`/details/${encodeURIComponent(
+                animal.uid
+              )}?search=${search}&pageNum=${pageNum}&pageSize=${pageSize}`}
+            >
               {animal.name}
             </Link>
           </li>
