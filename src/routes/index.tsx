@@ -1,16 +1,16 @@
 import { RootLayout } from '@/layouts';
 import {
-  ControlledFormPage,
-  ErrorPage,
   HomePage,
   UncontrolledFormPage,
+  ControlledFormPage,
+  ErrorPage,
 } from '@/pages';
 import { createBrowserRouter } from 'react-router-dom';
 
 export const enum APP_ROUTES {
   HOME = '/',
-  CONTROLLED_FORM = 'controlled',
   UNCONTROLLED_FORM = 'uncontrolled',
+  CONTROLLED_FORM = 'controlled',
 }
 
 export const router = createBrowserRouter([
@@ -24,12 +24,12 @@ export const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: APP_ROUTES.CONTROLLED_FORM,
-        element: <ControlledFormPage />,
-      },
-      {
         path: APP_ROUTES.UNCONTROLLED_FORM,
         element: <UncontrolledFormPage />,
+      },
+      {
+        path: APP_ROUTES.CONTROLLED_FORM,
+        element: <ControlledFormPage />,
       },
     ],
   },
