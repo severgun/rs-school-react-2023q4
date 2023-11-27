@@ -1,0 +1,15 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  max-width: 350px;
+}
+
+.label {
+  display: flex;
+  justify-content: space-between;
+  margin: 3px 0 3px;
+}
+
+.submitButton {
+  margin-top: 20px;
+}

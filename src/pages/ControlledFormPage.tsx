@@ -1,5 +1,11 @@
+import { ControlledForm } from '@/features';
 import React from 'react';
 
 export default function ControlledFormPage(): React.JSX.Element {
-  return <div>ControlledForm</div>;
+  return (
+    <>
+      <h2>Controlled Form</h2>
+      <ControlledForm />
+    </>
+  );
 }
