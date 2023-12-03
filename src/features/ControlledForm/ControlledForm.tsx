@@ -13,7 +13,12 @@ export default function ControlledForm(): React.JSX.Element {
 
   const navigate = useNavigate();
 
-  const { register, handleSubmit } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: 'onChange',
     resolver: yupResolver(formSchema),
   });
 
@@ -25,48 +30,127 @@ export default function ControlledForm(): React.JSX.Element {
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-      <label className={styles.label}>
-        Name:
-        <input type="text" {...register('name', { required: true })} />
-      </label>
-      <label className={styles.label}>
-        Age:
-        <input
-          type="number"
-          {...register('age', { required: true, min: 18, max: 99 })}
-        />
-      </label>
-      <label className={styles.label}>
-        Email:
-        <input type="email" {...register('email', { required: true })} />
-      </label>
-      <label className={styles.label}>
-        Password:
-        <input type="password" {...register('password', { required: true })} />
-      </label>
-      <label className={styles.label}>
-        Confirm:
-        <input type="password" />
-      </label>
-      <label className={styles.label}>
-        Gender:
-        <select {...register('gender', { required: true })}>
-          <option value={GENDER.Male}>{GENDER.Male}</option>
-          <option value={GENDER.Female}>{GENDER.Female}</option>
-        </select>
-      </label>
-      <label className={styles.label}>
-        <input type="checkbox" defaultChecked={false} />
-        Accept Terms & Conditions
-      </label>
-      <label className={styles.label}>
-        Image:
-        <input type="file" accept="image/png, image/jpeg" />
-      </label>
-      <label className={styles.label}>
-        Country:
-        <input type="text" />
-      </label>
+      <div className={styles.inputContainer}>
+        <label className={styles.label}>
+          Name:
+          <input type="text" {...register('name', { required: true })} />
+        </label>
+        {errors.name && (
+          <p className={styles.errorMessage}>{errors.name.message}</p>
+        )}
+      </div>
+      <div className={styles.inputContainer}>
+        <label className={styles.label}>
+          Age:
+          <input
+            type="number"
+            min={13}
+            max={99}
+            {...register('age', {
+              required: true,
+              min: 13,
+              max: 99,
+              valueAsNumber: true,
+            })}
+          />
+        </label>
+        {errors.age && (
+          <p className={styles.errorMessage}>{errors.age.message}</p>
+        )}
+      </div>
+      <div className={styles.inputContainer}>
+        <label className={styles.label}>
+          Email:
+          <input type="email" {...register('email', { required: true })} />
+        </label>
+        {errors.email && (
+          <p className={styles.errorMessage}>{errors.email.message}</p>
+        )}
+      </div>
+      <div className={styles.inputContainer}>
+        <label className={styles.label}>
+          Password:
+          <input
+            type="password"
+            {...register('password', { required: true })}
+          />
+        </label>
+        {errors.password && (
+          <p className={styles.errorMessage}>{errors.password.message}</p>
+        )}
+      </div>
+      <div className={styles.inputContainer}>
+        <label className={styles.label}>
+          Confirm:
+          <input
+            type="password"
+            {...register('passwordConfirm', { required: true })}
+          />
+        </label>
+        {errors.passwordConfirm && (
+          <p className={styles.errorMessage}>
+            {errors.passwordConfirm.message}
+          </p>
+        )}
+      </div>
+      <div className={styles.inputContainer}>
+        <label className={styles.label}>
+          Gender:
+          <select {...register('gender', { required: true })}>
+            <option value={GENDER.Male}>{GENDER.Male}</option>
+            <option value={GENDER.Female}>{GENDER.Female}</option>
+          </select>
+        </label>
+        {errors.gender && (
+          <p className={styles.errorMessage}>{errors.gender.message}</p>
+        )}
+      </div>
+      <div className={styles.inputContainer}>
+        <label className={styles.label}>
+          <input
+            type="checkbox"
+            defaultChecked={false}
+            {...register('isTermsAccepted', { required: true })}
+          />
+          Accept Terms & Conditions
+        </label>
+        {errors.isTermsAccepted && (
+          <p className={styles.errorMessage}>
+            {errors.isTermsAccepted.message}
+          </p>
+        )}
+      </div>
+      <div className={styles.inputContainer}>
+        <label className={styles.label}>
+          Image:
+          <input
+            type="file"
+            accept="image/png, image/jpeg"
+            {...register('image', {
+              setValueAs: (value) => {
+                return {
+                  image: value.name,
+                  size: value.size,
+                  type: value.type,
+                };
+              },
+            })}
+          />
+        </label>
+        {errors.image && (
+          <p className={styles.errorMessage}>{errors.image.message}</p>
+        )}
+      </div>
+      <div className={styles.inputContainer}>
+        <label className={styles.label}>
+          Country:
+          <input type="text" {...register('country', { required: true })} />
+        </label>
+        {errors.country && (
+          <p className={styles.errorMessage}>{errors.country.message}</p>
+        )}
+      </div>
+
       <button
         type="submit"
         className={styles.submitButton}
