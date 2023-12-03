@@ -1,0 +1,17 @@
+.formResultsContainer {
+  display: flex;
+  flex-direction: column; 
+}
+
+.highlightedContainer {
+  background-color: lightblue;
+}
+
+.container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.uploadedImg {
+  max-width: 200px;
+}

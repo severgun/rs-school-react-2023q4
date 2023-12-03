@@ -1,0 +1,28 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  max-width: 350px;
+}
+
+.label {
+  display: flex;
+  justify-content: space-between;
+  margin: 3px 0 3px;
+}
+
+.submitButton {
+  margin-top: 20px;
+}
+
+.errorMessage {
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  color: red;
+  text-align: end;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+}
