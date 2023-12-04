@@ -1,8 +1,8 @@
-import { FormsData, ImageData } from '@/features/shared';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
+import { FormsDataState, ImageData } from '@/types';
 
-const initialState: FormsData = {
+const initialState: FormsDataState = {
   name: '',
   age: 0,
   email: '',
@@ -45,7 +45,7 @@ export const uncontrolledFormSlice = createSlice({
     setCountry: (state, action: PayloadAction<string>) => {
       state.country = action.payload;
     },
-    setFormData: (state, action: PayloadAction<FormsData>) => {
+    setFormData: (state, action: PayloadAction<FormsDataState>) => {
       return action.payload;
     },
   },

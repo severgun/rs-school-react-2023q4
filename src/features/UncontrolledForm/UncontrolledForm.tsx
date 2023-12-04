@@ -7,7 +7,7 @@ import { useAppDispatch } from '@/store';
 import { ValidationError } from 'yup';
 import {
   FORM_TYPES,
-  setLastUpdatedFrom,
+  setLastUpdatedForm,
 } from '@/store/slices/lastUpdatedFormSlice';
 import { useNavigate } from 'react-router-dom';
 
@@ -29,7 +29,7 @@ export default function UncontrolledForm(): React.JSX.Element {
   const [passwordError, setPasswordError] = useState<string>('');
   const [passwordConfirmError, setPasswordConfirmError] = useState<string>('');
   const [genderError, setGenderError] = useState<string>('');
-  const [termsAcceptedError, setTeremsAcceptedError] = useState<string>('');
+  const [termsAcceptedError, setTermsAcceptedError] = useState<string>('');
   const [imageError, setImageError] = useState<string>('');
   const [countryError, setCountryError] = useState<string>('');
 
@@ -44,7 +44,7 @@ export default function UncontrolledForm(): React.JSX.Element {
     setPasswordError('');
     setPasswordConfirmError('');
     setGenderError('');
-    setTeremsAcceptedError('');
+    setTermsAcceptedError('');
     setImageError('');
     setCountryError('');
   };
@@ -54,9 +54,23 @@ export default function UncontrolledForm(): React.JSX.Element {
 
     formSchema
       .validate(formData, { abortEarly: false })
-      .then(() => {
-        dispatch(setLastUpdatedFrom(FORM_TYPES.UNCONTROLLED));
-        dispatch(uncontrolledFormSlice.setFormData(formData));
+      .then(async () => {
+        dispatch(setLastUpdatedForm(FORM_TYPES.UNCONTROLLED));
+
+        const imageFile = formData.image as FileList;
+        const imageData = {
+          image: (await convertBase64(imageFile[0])) || '',
+          size: imageFile[0].size,
+          type: imageFile[0].type,
+        };
+
+        dispatch(
+          uncontrolledFormSlice.setFormData({
+            ...formData,
+            image: imageData,
+          })
+        );
+
         navigate('/');
       })
       .catch((err: ValidationError) => {
@@ -81,7 +95,7 @@ export default function UncontrolledForm(): React.JSX.Element {
               setGenderError(error.message);
               break;
             case 'isTermsAccepted':
-              setTeremsAcceptedError(error.message);
+              setTermsAcceptedError(error.message);
               break;
             case 'country':
               setCountryError(error.message);
@@ -116,12 +130,7 @@ export default function UncontrolledForm(): React.JSX.Element {
     const isTermsAccepted = termsAcceptedCheckboxRef.current?.checked;
     const country = countryInputRef.current?.value;
 
-    const file = imgInputRef.current?.files?.[0];
-
-    let imgBase64: string | undefined = '';
-    if (file) {
-      imgBase64 = await convertBase64(file);
-    }
+    const fileList = imgInputRef.current?.files;
 
     const formData: FormsData = {
       name: name || '',
@@ -131,11 +140,7 @@ export default function UncontrolledForm(): React.JSX.Element {
       passwordConfirm: passwordConfirm,
       gender: gender || '',
       isTermsAccepted: isTermsAccepted || false,
-      image: {
-        image: imgBase64 || '',
-        size: file?.size || 0,
-        type: file?.type || '',
-      },
+      image: fileList,
       country: country || '',
     };
 

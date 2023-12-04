@@ -4,12 +4,12 @@ import {
   selectUncontrolledForm,
   useAppDispatch,
   useAppSelector,
-  setLastUpdatedFrom,
+  setLastUpdatedForm,
 } from '@/store';
 import styles from './HomePage.module.css';
 import React, { useEffect, useState } from 'react';
-import { FormsData } from '@/features/shared';
 import { FORM_TYPES } from '@/store/slices/lastUpdatedFormSlice';
+import { FormsDataState } from '@/types';
 
 export default function HomePage(): React.JSX.Element {
   const [uncontrolledHighlighted, setUncontrolledHighlighted] =
@@ -29,7 +29,7 @@ export default function HomePage(): React.JSX.Element {
       setUncontrolledHighlighted(true);
       setTimeout(() => {
         setUncontrolledHighlighted(false);
-        dispatch(setLastUpdatedFrom(null));
+        dispatch(setLastUpdatedForm(null));
       }, HIGHLIGHT_TIMEOUT);
     }
 
@@ -37,12 +37,12 @@ export default function HomePage(): React.JSX.Element {
       setControlledHighlighted(true);
       setTimeout(() => {
         setControlledHighlighted(false);
-        dispatch(setLastUpdatedFrom(null));
+        dispatch(setLastUpdatedForm(null));
       }, HIGHLIGHT_TIMEOUT);
     }
   }, [dispatch, formName]);
 
-  const printFormResults = (formState: FormsData): React.JSX.Element => {
+  const printFormResults = (formState: FormsDataState): React.JSX.Element => {
     return (
       <>
         <ul>
@@ -83,9 +83,9 @@ export default function HomePage(): React.JSX.Element {
         </div>
         <div
           className={
-            styles.formResultsContainer +
-            ',' +
-            (controlledHighlighted && styles.highlightedContainer)
+            controlledHighlighted
+              ? `${styles.formResultsContainer}, ${styles.highlightedContainer}`
+              : styles.formResultsContainer
           }
         >
           <h3>Controlled Form Content:</h3>

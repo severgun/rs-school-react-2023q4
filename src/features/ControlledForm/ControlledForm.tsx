@@ -4,9 +4,11 @@ import styles from './ControlledForm.module.css';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormsData, GENDER, formSchema } from '@/features/shared';
 import * as controlledFormSlice from '@/store/slices/controlledFormSlice';
-import { setLastUpdatedFrom, useAppDispatch } from '@/store';
+import { setLastUpdatedForm, useAppDispatch } from '@/store';
 import { useNavigate } from 'react-router-dom';
 import { FORM_TYPES } from '@/store/slices/lastUpdatedFormSlice';
+import Autocomplete from '@/components/Autocomplete/Autocomplete';
+import { convertBase64 } from '@/utils/convertBase64';
 
 export default function ControlledForm(): React.JSX.Element {
   const dispatch = useAppDispatch();
@@ -16,15 +18,29 @@ export default function ControlledForm(): React.JSX.Element {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm({
     mode: 'onChange',
     resolver: yupResolver(formSchema),
   });
 
-  const onSubmit: SubmitHandler<FormsData> = (data) => {
-    dispatch(setLastUpdatedFrom(FORM_TYPES.CONTROLLED));
-    dispatch(controlledFormSlice.setFormData(data));
+  const onSubmit: SubmitHandler<FormsData> = async (data) => {
+    dispatch(setLastUpdatedForm(FORM_TYPES.CONTROLLED));
+
+    const imageFile = data.image as FileList;
+    const imageData = {
+      image: (await convertBase64(imageFile[0])) || '',
+      size: imageFile[0].size,
+      type: imageFile[0].type,
+    };
+
+    dispatch(
+      controlledFormSlice.setFormData({
+        ...data,
+        image: imageData,
+      })
+    );
+
     navigate('/');
   };
 
@@ -126,15 +142,7 @@ export default function ControlledForm(): React.JSX.Element {
           <input
             type="file"
             accept="image/png, image/jpeg"
-            {...register('image', {
-              setValueAs: (value) => {
-                return {
-                  image: value.name,
-                  size: value.size,
-                  type: value.type,
-                };
-              },
-            })}
+            {...register('image', { required: true })}
           />
         </label>
         {errors.image && (
@@ -144,7 +152,7 @@ export default function ControlledForm(): React.JSX.Element {
       <div className={styles.inputContainer}>
         <label className={styles.label}>
           Country:
-          <input type="text" {...register('country', { required: true })} />
+          <Autocomplete register={register} />
         </label>
         {errors.country && (
           <p className={styles.errorMessage}>{errors.country.message}</p>
@@ -155,6 +163,7 @@ export default function ControlledForm(): React.JSX.Element {
         type="submit"
         className={styles.submitButton}
         onClick={handleSubmit(onSubmit)}
+        disabled={!isValid}
       >
         Submit
       </button>

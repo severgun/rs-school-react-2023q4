@@ -18,7 +18,7 @@ export const lastUpdatedFormSlice = createSlice({
   name: 'lastUpdatedFormState',
   initialState,
   reducers: {
-    setLastUpdatedFrom: (state, action: PayloadAction<FORM_TYPES | null>) => {
+    setLastUpdatedForm: (state, action: PayloadAction<FORM_TYPES | null>) => {
       state.formName = action.payload;
     },
   },
@@ -27,6 +27,6 @@ export const lastUpdatedFormSlice = createSlice({
 export const selectLastUpdatedForm = (state: RootState) =>
   state.lastUpdatedFormState;
 
-export const { setLastUpdatedFrom } = lastUpdatedFormSlice.actions;
+export const { setLastUpdatedForm } = lastUpdatedFormSlice.actions;
 
 export default lastUpdatedFormSlice.reducer;

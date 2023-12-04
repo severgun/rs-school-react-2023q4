@@ -6,8 +6,11 @@ import controlledFormSlice, {
 } from './slices/controlledFormSlice';
 import lastUpdatedFormSlice, {
   selectLastUpdatedForm,
-  setLastUpdatedFrom,
+  setLastUpdatedForm,
 } from './slices/lastUpdatedFormSlice';
+import countriesListSlice, {
+  selectCountriesList,
+} from './slices/countriesListSlice';
 import { useAppDispatch, useAppSelector } from './hooks';
 import { store } from './store';
 
@@ -17,9 +20,11 @@ export {
   useAppDispatch,
   useAppSelector,
   lastUpdatedFormSlice,
-  setLastUpdatedFrom,
+  setLastUpdatedForm,
   selectLastUpdatedForm,
   selectUncontrolledForm,
   selectControlledForm,
+  selectCountriesList,
+  countriesListSlice,
   store,
 };

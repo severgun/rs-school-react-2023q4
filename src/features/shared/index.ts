@@ -5,12 +5,6 @@ export const enum GENDER {
   Female = 'Female',
 }
 
-export type ImageData = {
-  image: string;
-  size: number;
-  type: string;
-};
-
 const MAX_IMAGE_SIZE_KB = 512;
 const MAX_IMAGE_SIZE = MAX_IMAGE_SIZE_KB * 1024;
 
@@ -59,26 +53,20 @@ export const formSchema = yup.object().shape({
     .oneOf([yup.ref('password')], 'passwords does not match'),
   gender: yup.string().required(),
   image: yup
-    .object()
-    .shape({
-      image: yup.string().required(),
-      size: yup
-        .number()
-        .positive()
-        .max(
-          MAX_IMAGE_SIZE,
-          `image size must be less or equal to ${MAX_IMAGE_SIZE_KB}kB`
-        )
-        .required(),
-      type: yup
-        .string()
-        .test('type', 'image must be either png or jpeg', (value) => {
-          return value === 'image/png' || value === 'image/jpeg';
-        })
-        .required(),
-    })
+    .mixed<FileList>()
     .nullable()
-    .required(),
+    .test(
+      'image',
+      `image is required and size should be less or equal to ${MAX_IMAGE_SIZE_KB} kB`,
+      (fileList) => {
+        if (fileList && fileList.length > 0) {
+          const file = fileList[0];
+          return file.size <= MAX_IMAGE_SIZE;
+        } else {
+          return false;
+        }
+      }
+    ),
   isTermsAccepted: yup
     .bool()
     .required()

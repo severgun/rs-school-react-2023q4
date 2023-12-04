@@ -4,12 +4,14 @@ import {
   controlledFormSlice,
   lastUpdatedFormSlice,
 } from '@/store';
+import countriesListSlice from './slices/countriesListSlice';
 
 export const store = configureStore({
   reducer: {
     uncontrolledFormState: uncontrolledFormSlice,
     controlledFormState: controlledFormSlice,
     lastUpdatedFormState: lastUpdatedFormSlice,
+    countriesListState: countriesListSlice,
   },
 });
 
