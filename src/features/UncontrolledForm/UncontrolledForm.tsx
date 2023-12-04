@@ -10,6 +10,7 @@ import {
   setLastUpdatedForm,
 } from '@/store/slices/lastUpdatedFormSlice';
 import { useNavigate } from 'react-router-dom';
+import AutocompleteUnc from '@/components/AutocompleteUnc/AutocompleteUnc';
 
 export default function UncontrolledForm(): React.JSX.Element {
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -221,7 +222,7 @@ export default function UncontrolledForm(): React.JSX.Element {
       <div className={styles.inputContainer}>
         <label className={styles.label}>
           Country:
-          <input type="text" ref={countryInputRef} />
+          <AutocompleteUnc ref={countryInputRef} />
         </label>
         {countryError && <p className={styles.errorMessage}>{countryError}</p>}
       </div>

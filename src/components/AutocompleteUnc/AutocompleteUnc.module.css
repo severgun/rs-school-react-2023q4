@@ -1,0 +1,9 @@
+.autocompleteContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.suggestItem {
+  list-style: none;
+  margin: 5px 0;
+}
